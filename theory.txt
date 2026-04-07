@@ -1,0 +1,5 @@
+model/
+└── predict.py    → XGBoost logic (loads model, extracts features, runs prediction)
+
+routes/
+└── predict.py    → API endpoints (receives request, calls model, saves to DB, returns response)

@@ -1,0 +1,32 @@
+# Virtual environment
+myenvr/
+venv/
+env/
+.env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Database (will be created fresh on server)
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Distribution
+*.egg-info/
+dist/
+build/
+
+# Archive data (too large for deployment)
+archive/

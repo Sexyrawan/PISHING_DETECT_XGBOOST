@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan History — PhishGuard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- ── Navbar ────────────────────────────────────── -->
+        <nav class="navbar">
+            <a href="/" class="navbar__brand">
+                <div class="navbar__icon">🛡️</div>
+                <div class="navbar__title">Phish<span>Guard</span></div>
+            </a>
+            <div class="navbar__links">
+                <a href="/" class="navbar__link">Scan</a>
+                <a href="/history" class="navbar__link navbar__link--active">History</a>
+            </div>
+        </nav>
+
+        <!-- ── Header ────────────────────────────────────── -->
+        <section class="hero animate-in">
+            <h1 class="hero__title">Scan History</h1>
+            <p class="hero__subtitle">
+                All previously scanned URLs and their results.
+            </p>
+        </section>
+
+        <!-- ── History Table ─────────────────────────────── -->
+        <div class="card animate-in animate-in--delay-1">
+            {% if scans and scans|length > 0 %}
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>URL</th>
+                            <th>Status</th>
+                            <th>Confidence</th>
+                            <th>Scanned At</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for scan in scans %}
+                        <tr>
+                            <td style="color: var(--text-muted);">{{ scan.id }}</td>
+                            <td>
+                                <div class="history-table__url" title="{{ scan.url }}">
+                                    {{ scan.url }}
+                                </div>
+                            </td>
+                            <td>
+                                {% if scan.is_phishing %}
+                                    <span class="badge badge--danger">Phishing</span>
+                                {% else %}
+                                    <span class="badge badge--safe">Safe</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="confidence-value {{ 'confidence-value--danger' if scan.is_phishing else 'confidence-value--safe' }}">
+                                    {{ (scan.confidence * 100)|round(1) }}%
+                                </span>
+                            </td>
+                            <td class="history-table__time">
+                                {{ scan.scanned_at.strftime('%b %d, %H:%M') if scan.scanned_at else '—' }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-state__icon">📭</div>
+                <p class="empty-state__text">No scans yet. Go scan your first URL!</p>
+                <a href="/" class="btn btn--primary">🔍 Scan a URL</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- ── Footer ────────────────────────────────────── -->
+        <footer class="footer">
+            PhishGuard · Built with FastAPI & XGBoost · Rahul & Harsh
+        </footer>
+
+    </div>
+</body>
+</html>

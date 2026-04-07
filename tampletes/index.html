@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PhishGuard — AI-powered phishing URL detector. Scan any URL instantly with XGBoost ML to detect phishing attempts.">
+    <title>PhishGuard — Phishing URL Detector</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- ── Navbar ────────────────────────────────────── -->
+        <nav class="navbar">
+            <a href="/" class="navbar__brand">
+                <div class="navbar__icon">🛡️</div>
+                <div class="navbar__title">Phish<span>Guard</span></div>
+            </a>
+            <div class="navbar__links">
+                <a href="/" class="navbar__link navbar__link--active">Scan</a>
+                <a href="/history" class="navbar__link">History</a>
+            </div>
+        </nav>
+
+        <!-- ── Hero ──────────────────────────────────────── -->
+        <section class="hero animate-in">
+            <div class="hero__badge">
+                XGBoost ML · 98.6% Accuracy
+            </div>
+            <h1 class="hero__title">Detect Phishing URLs<br>In Seconds</h1>
+            <p class="hero__subtitle">
+                Paste any suspicious URL below. Our machine learning model analyzes 48 features to determine if it's a phishing attempt.
+            </p>
+        </section>
+
+        <!-- ── Scan Form ─────────────────────────────────── -->
+        <div class="card card--glow animate-in animate-in--delay-1">
+            <form class="scan-form" action="/scan" method="POST" id="scanForm">
+                <div class="input-group">
+                    <span class="input-group__icon">🔗</span>
+                    <input
+                        type="text"
+                        name="url"
+                        class="input-group__field"
+                        id="urlInput"
+                        placeholder="Paste a URL to scan — e.g. http://suspicious-site.com/login"
+                        required
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+                </div>
+                <button type="submit" class="btn btn--primary btn--full" id="scanBtn">
+                    <span class="btn__text">🔍  Scan URL</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+        </div>
+
+        <!-- ── Footer ────────────────────────────────────── -->
+        <footer class="footer animate-in animate-in--delay-3">
+            PhishGuard · Built with FastAPI & XGBoost · Rahul & Harsh
+        </footer>
+
+    </div>
+
+    <script>
+        // Show loading spinner on submit
+        document.getElementById('scanForm').addEventListener('submit', function() {
+            const btn = document.getElementById('scanBtn');
+            btn.classList.add('btn--loading');
+            btn.disabled = true;
+        });
+
+        // Focus input on page load
+        document.getElementById('urlInput').focus();
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Result — PhishGuard</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- ── Navbar ────────────────────────────────────── -->
+        <nav class="navbar">
+            <a href="/" class="navbar__brand">
+                <div class="navbar__icon">🛡️</div>
+                <div class="navbar__title">Phish<span>Guard</span></div>
+            </a>
+            <div class="navbar__links">
+                <a href="/" class="navbar__link">Scan</a>
+                <a href="/history" class="navbar__link">History</a>
+            </div>
+        </nav>
+
+        <!-- ── Result Card ───────────────────────────────── -->
+        <div class="card card--glow animate-in">
+            <div class="result {{ 'result--danger' if scan.is_phishing else 'result--safe' }}">
+
+                <!-- Icon -->
+                <div class="result__icon">
+                    {% if scan.is_phishing %}⚠️{% else %}✅{% endif %}
+                </div>
+
+                <!-- Label -->
+                <div class="result__label">
+                    {% if scan.is_phishing %}
+                        ⛔ Phishing Detected
+                    {% else %}
+                        ✅ URL Looks Safe
+                    {% endif %}
+                </div>
+
+                <!-- Scanned URL -->
+                <div class="result__url">{{ scan.url }}</div>
+
+                <!-- Confidence -->
+                <div class="result__confidence">
+                    <div class="confidence-bar">
+                        <div class="confidence-bar__fill" id="confidenceFill" data-width="{{ (scan.confidence * 100)|round(1) }}"></div>
+                    </div>
+                    <span class="confidence-value">{{ (scan.confidence * 100)|round(1) }}%</span>
+                </div>
+
+                <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 4px;">
+                    Confidence Score — how certain the model is about this prediction
+                </p>
+                <p style="color: var(--text-muted); font-size: 12px;">
+                    Scanned at {{ scan.scanned_at.strftime('%Y-%m-%d %H:%M:%S') if scan.scanned_at else 'N/A' }}
+                </p>
+
+                <!-- Actions -->
+                <div class="action-row">
+                    <a href="/" class="btn btn--primary">🔍 Scan Another</a>
+                    <a href="/history" class="btn btn--secondary">📋 View History</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Features Breakdown ────────────────────────── -->
+        {% if features %}
+        <div class="card animate-in animate-in--delay-2" style="margin-top: 24px;">
+            <div class="features">
+                <div class="features__title" onclick="toggleFeatures()">
+                    Extracted Features ({{ features|length }})
+                </div>
+                <div class="features__grid" id="featuresGrid" style="display: none;">
+                    {% for name, value in features.items() %}
+                    <div class="feature-chip">
+                        <span class="feature-chip__name">{{ name }}</span>
+                        <span class="feature-chip__value">{{ value }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ── Footer ────────────────────────────────────── -->
+        <footer class="footer">
+            PhishGuard · Built with FastAPI & XGBoost · Rahul & Harsh
+        </footer>
+
+    </div>
+
+    <script>
+        // Set confidence bar width from data attribute (avoids Jinja2-in-CSS lint warning)
+        const fill = document.getElementById('confidenceFill');
+        if (fill) fill.style.width = fill.dataset.width + '%';
+
+        function toggleFeatures() {
+            const grid = document.getElementById('featuresGrid');
+            grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+        }
+    </script>
+</body>
+</html>
