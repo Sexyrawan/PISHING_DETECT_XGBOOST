@@ -30,7 +30,7 @@ templates = Jinja2Templates(directory=_TEMPLATE_DIR)
 # ── GET /  —  Homepage ──────────────────────────────────────
 @router.get("/", response_class=HTMLResponse)
 async def homepage(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html")
 
 
 # ── POST /scan  —  Scan a URL ───────────────────────────────
@@ -56,8 +56,7 @@ async def scan_url(request: Request, url: str = Form(...), db: Session = Depends
     db.refresh(scan)  # get the auto-generated id & scanned_at
 
     # ── Render result ──
-    return templates.TemplateResponse("result.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "result.html", context={
         "scan": scan,
         "features": result["features"],
     })
@@ -67,8 +66,7 @@ async def scan_url(request: Request, url: str = Form(...), db: Session = Depends
 @router.get("/history", response_class=HTMLResponse)
 async def history_page(request: Request, db: Session = Depends(get_db)):
     scans = db.query(ScanResult).order_by(ScanResult.scanned_at.desc()).all()
-    return templates.TemplateResponse("history.html", {
-        "request": request,
+    return templates.TemplateResponse(request, "history.html", context={
         "scans": scans,
     })
 
